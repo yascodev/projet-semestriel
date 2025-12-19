@@ -55,9 +55,6 @@ Types autorisés :
 - chore : configuration / maintenance
 - docs : documentation
 
-Exemples :
+## Règle de validation des issues
 
-- feat: ajout du routeur principal
-- fix: correction de la connexion PDO
-- chore: configuration docker-compose
-- docs: ajout des règles de contribution
+Toute issue doit être testée et validée par au moins un autre membre de l’équipe avant d’être déplacée dans la colonne “Terminé”.
