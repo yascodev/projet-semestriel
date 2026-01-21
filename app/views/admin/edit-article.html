@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier un article - Back-office</title>
+    <link rel="stylesheet" href="/dist/css/main.css">
+</head>
+<body class="admin-edit-article">
+    <div class="form-container">
+        <div class="form-header">
+            <h1 class="form-title">Modifier l'article</h1>
+            <p class="form-subtitle">
+                Créé le <?= date('d/m/Y H:i', strtotime($article->created_at)) ?>
+                <?php if ($article->updated_at !== $article->created_at): ?>
+                    | Modifié le <?= date('d/m/Y H:i', strtotime($article->updated_at)) ?>
+                <?php endif; ?>
+            </p>
+        </div>
+
+        <!-- Messages de feedback -->
+        <?php if (isset($_GET['success'])): ?>
+            <div class="alert alert-success" role="alert">
+                Article mis à jour avec succès !
+            </div>
+        <?php endif; ?>
+
+        <?php if (isset($_GET['error'])): ?>
+            <div class="alert alert-danger" role="alert">
+                <?= htmlspecialchars($_GET['error']) ?>
+            </div>
+        <?php endif; ?>
+
+        <form method="POST" action="/admin/articles/<?= $article->id ?>/update" class="article-form" id="articleForm">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
+            <input type="hidden" name="article_id" value="<?= $article->id ?>">
+
+            <!-- Section de base -->
+            <fieldset class="form-section">
+                <legend class="section-title">Informations de base</legend>
+
+                <div class="form-group">
+                    <label for="title" class="form-label">Titre <span class="required">*</span></label>
+                    <input type="text" id="title" name="title" class="form-input" 
+                           value="<?= htmlspecialchars($article->title) ?>"
+                           placeholder="Entrez le titre de l'article"
+                           required 
+                           minlength="3" 
+                           maxlength="255"
+                           data-error="Le titre doit faire entre 3 et 255 caractères">
+                    <span class="form-error" id="title-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="excerpt" class="form-label">Extrait <span class="required">*</span></label>
+                    <textarea id="excerpt" name="excerpt" class="form-input form-textarea"
+                              placeholder="Un court résumé de votre article (200 caractères recommandés)"
+                              required
+                              minlength="10"
+                              maxlength="500"
+                              rows="3"
+                              data-error="L'extrait doit faire entre 10 et 500 caractères"><?= htmlspecialchars($article->excerpt ?? '') ?></textarea>
+                    <span class="form-error" id="excerpt-error"></span>
+                    <small class="form-hint" id="excerpt-hint"><?= strlen($article->excerpt ?? '') ?> / 500 caractères</small>
+                </div>
+            </fieldset>
+
+            <!-- Section contenu -->
+            <fieldset class="form-section">
+                <legend class="section-title">Contenu</legend>
+
+                <div class="form-group">
+                    <label for="content" class="form-label">Contenu <span class="required">*</span></label>
+                    <textarea id="content" name="content" class="form-input form-textarea form-textarea-large"
+                              placeholder="Écrivez votre contenu ici..."
+                              required
+                              minlength="10"
+                              data-error="Le contenu doit faire au minimum 10 caractères"
+                              rows="12"><?= htmlspecialchars($article->content ?? '') ?></textarea>
+                    <span class="form-error" id="content-error"></span>
+                    <small class="form-hint">Utilisez du HTML ou du texte brut</small>
+                </div>
+            </fieldset>
+
+            <!-- Section statut -->
+            <fieldset class="form-section">
+                <legend class="section-title">Statut et publication</legend>
+
+                <div class="form-group">
+                    <label for="status" class="form-label">Statut <span class="required">*</span></label>
+                    <select id="status" name="status" class="form-input" required>
+                        <option value="draft" <?= $article->status === 'draft' ? 'selected' : '' ?>>Brouillon</option>
+                        <option value="published" <?= $article->status === 'published' ? 'selected' : '' ?>>Publié</option>
+                        <option value="archived" <?= $article->status === 'archived' ? 'selected' : '' ?>>Archivé</option>
+                    </select>
+                </div>
+
+                <?php if ($article->status === 'published' && $article->published_at): ?>
+                    <div class="form-group">
+                        <p class="info-text">
+                            <strong>Date de publication :</strong> 
+                            <?= date('d/m/Y à H:i', strtotime($article->published_at)) ?>
+                        </p>
+                    </div>
+                <?php endif; ?>
+            </fieldset>
+
+            <!-- Section catégories -->
+            <fieldset class="form-section">
+                <legend class="section-title">Catégories <span class="optional">(optionnel)</span></legend>
+
+                <div class="form-group">
+                    <label class="form-label">Sélectionner une ou plusieurs catégories</label>
+                    <div class="checkbox-group" id="categories">
+                        <?php if (empty($categories)): ?>
+                            <p class="no-items">Aucune catégorie disponible</p>
+                        <?php else: ?>
+                            <?php foreach ($categories as $category): ?>
+                                <?php 
+                                    $isSelected = false;
+                                    foreach ($article->categories as $selectedCat) {
+                                        if ($selectedCat->id === $category->id) {
+                                            $isSelected = true;
+                                            break;
+                                        }
+                                    }
+                                ?>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="category-<?= $category->id ?>" 
+                                           name="categories[]" 
+                                           value="<?= $category->id ?>"
+                                           class="form-checkbox"
+                                           <?= $isSelected ? 'checked' : '' ?>>
+                                    <label for="category-<?= $category->id ?>" class="checkbox-label">
+                                        <?= htmlspecialchars($category->name) ?>
+                                    </label>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Section tags -->
+            <fieldset class="form-section">
+                <legend class="section-title">Tags <span class="optional">(optionnel)</span></legend>
+
+                <div class="form-group">
+                    <label class="form-label">Sélectionner un ou plusieurs tags</label>
+                    <div class="checkbox-group" id="tags">
+                        <?php if (empty($tags)): ?>
+                            <p class="no-items">Aucun tag disponible</p>
+                        <?php else: ?>
+                            <?php foreach ($tags as $tag): ?>
+                                <?php 
+                                    $isSelected = false;
+                                    foreach ($article->tags as $selectedTag) {
+                                        if ($selectedTag->id === $tag->id) {
+                                            $isSelected = true;
+                                            break;
+                                        }
+                                    }
+                                ?>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="tag-<?= $tag->id ?>" 
+                                           name="tags[]" 
+                                           value="<?= $tag->id ?>"
+                                           class="form-checkbox"
+                                           <?= $isSelected ? 'checked' : '' ?>>
+                                    <label for="tag-<?= $tag->id ?>" class="checkbox-label">
+                                        <?= htmlspecialchars($tag->name) ?>
+                                    </label>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Section actions -->
+            <div class="form-actions">
+                <a href="/admin/articles" class="btn btn-secondary">
+                    ← Retour à la liste
+                </a>
+                <div class="action-buttons-right">
+                    <button type="button" class="btn btn-outline-secondary" onclick="window.history.back()">
+                        ✕ Annuler
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        💾 Enregistrer les modifications
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <style>
+        .admin-edit-article {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .form-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 40px;
+        }
+
+        .form-header {
+            margin-bottom: 40px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 30px;
+        }
+
+        .form-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #333;
+            margin: 0 0 10px 0;
+        }
+
+        .form-subtitle {
+            color: #666;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            border-left: 4px solid;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border-color: #28a745;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #dc3545;
+        }
+
+        .article-form {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .form-section {
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 25px;
+            background-color: #fafbfc;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            display: flex;
+            gap: 8px;
+            margin: 0 0 20px 0;
+        }
+
+        .optional {
+            font-size: 13px;
+            font-weight: 400;
+            color: #999;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .required {
+            color: #dc3545;
+        }
+
+        .form-input,
+        .form-textarea,
+        select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-size: 14px;
+            transition: all 0.2s;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+
+        .form-input.error,
+        .form-textarea.error {
+            border-color: #dc3545;
+            background-color: #fff5f5;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-textarea-large {
+            min-height: 300px;
+        }
+
+        .form-error {
+            display: block;
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 5px;
+            min-height: 16px;
+        }
+
+        .form-hint {
+            display: block;
+            color: #999;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .info-text {
+            padding: 10px;
+            background-color: #e7f3ff;
+            border-left: 4px solid #007bff;
+            color: #004085;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #007bff;
+        }
+
+        .checkbox-label {
+            cursor: pointer;
+            user-select: none;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .checkbox-label:hover {
+            color: #007bff;
+        }
+
+        .no-items {
+            color: #999;
+            font-size: 14px;
+            text-align: center;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .action-buttons-right {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-outline-secondary {
+            background-color: transparent;
+            color: #6c757d;
+            border: 2px solid #6c757d;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        @media (max-width: 600px) {
+            .form-container {
+                padding: 20px;
+            }
+
+            .form-section {
+                padding: 15px;
+            }
+
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .action-buttons-right {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('articleForm');
+            const excerptField = document.getElementById('excerpt');
+            const excerptHint = document.getElementById('excerpt-hint');
+
+            // Mettre à jour le compteur de caractères
+            if (excerptField) {
+                excerptField.addEventListener('input', function() {
+                    const count = this.value.length;
+                    excerptHint.textContent = `${count} / 500 caractères`;
+                });
+            }
+
+            // Validation du formulaire
+            form.addEventListener('submit', function(e) {
+                let hasErrors = false;
+
+                // Réinitialiser les erreurs
+                document.querySelectorAll('.form-error').forEach(el => el.textContent = '');
+                document.querySelectorAll('.form-input, .form-textarea').forEach(el => el.classList.remove('error'));
+
+                // Valider le titre
+                const title = document.getElementById('title');
+                if (!title.value.trim()) {
+                    showError(title, 'Le titre est requis');
+                    hasErrors = true;
+                } else if (title.value.length < 3) {
+                    showError(title, 'Le titre doit faire au minimum 3 caractères');
+                    hasErrors = true;
+                }
+
+                // Valider l'extrait
+                const excerpt = document.getElementById('excerpt');
+                if (!excerpt.value.trim()) {
+                    showError(excerpt, "L'extrait est requis");
+                    hasErrors = true;
+                } else if (excerpt.value.length < 10) {
+                    showError(excerpt, "L'extrait doit faire au minimum 10 caractères");
+                    hasErrors = true;
+                }
+
+                // Valider le contenu
+                const content = document.getElementById('content');
+                if (!content.value.trim()) {
+                    showError(content, 'Le contenu est requis');
+                    hasErrors = true;
+                } else if (content.value.length < 10) {
+                    showError(content, 'Le contenu doit faire au minimum 10 caractères');
+                    hasErrors = true;
+                }
+
+                if (hasErrors) {
+                    e.preventDefault();
+                    document.querySelector('.form-header').scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+
+            function showError(field, message) {
+                field.classList.add('error');
+                const errorElement = document.getElementById(field.id + '-error');
+                if (errorElement) {
+                    errorElement.textContent = message;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des articles - Back-office</title>
+    <link rel="stylesheet" href="/dist/css/main.css">
+</head>
+<body class="admin-articles">
+    <div class="articles-container">
+        <div class="articles-header">
+            <h1 class="articles-title">Gestion des articles</h1>
+            <a href="/admin/articles/create" class="btn btn-primary">+ Créer un article</a>
+        </div>
+
+        <!-- Messages de feedback -->
+        <?php if (isset($_GET['success'])): ?>
+            <div class="alert alert-success" role="alert">
+                <?php 
+                    switch ($_GET['success']) {
+                        case 'created':
+                            echo "Article créé avec succès !";
+                            break;
+                        case 'updated':
+                            echo "Article mis à jour avec succès !";
+                            break;
+                        case 'published':
+                            echo "Article publié avec succès !";
+                            break;
+                        case 'archived':
+                            echo "Article archivé avec succès !";
+                            break;
+                        case 'deleted':
+                            echo "Article supprimé avec succès !";
+                            break;
+                        default:
+                            echo "Opération réussie !";
+                    }
+                ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if (isset($_GET['error'])): ?>
+            <div class="alert alert-danger" role="alert">
+                <?= htmlspecialchars($_GET['error']) ?>
+            </div>
+        <?php endif; ?>
+
+        <!-- Filtres -->
+        <div class="articles-filters">
+            <form method="GET" action="/admin/articles" class="filters-form">
+                <div class="filter-group">
+                    <label for="status-filter">Filtrer par statut :</label>
+                    <select id="status-filter" name="status" onchange="this.form.submit()">
+                        <option value="">Tous les statuts</option>
+                        <option value="draft" <?= $status === 'draft' ? 'selected' : '' ?>>Brouillons</option>
+                        <option value="published" <?= $status === 'published' ? 'selected' : '' ?>>Publiés</option>
+                        <option value="archived" <?= $status === 'archived' ? 'selected' : '' ?>>Archivés</option>
+                    </select>
+                </div>
+                <input type="hidden" name="page" value="1">
+            </form>
+        </div>
+
+        <!-- Tableau des articles -->
+        <div class="articles-table-wrapper">
+            <?php if (empty($articles)): ?>
+                <p class="no-articles">Aucun article trouvé.</p>
+            <?php else: ?>
+                <table class="articles-table">
+                    <thead>
+                        <tr>
+                            <th>Titre</th>
+                            <th>Auteur</th>
+                            <th>Statut</th>
+                            <th>Date de création</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($articles as $article): ?>
+                            <tr class="article-row" data-article-id="<?= $article->id ?>">
+                                <td class="article-title">
+                                    <a href="/admin/articles/<?= $article->id ?>/edit" class="article-link">
+                                        <?= htmlspecialchars($article->title) ?>
+                                    </a>
+                                </td>
+                                <td class="article-author">
+                                    <?= htmlspecialchars($article->author?->email ?? 'Inconnu') ?>
+                                </td>
+                                <td class="article-status">
+                                    <span class="status-badge status-<?= $article->status ?>">
+                                        <?php
+                                            switch ($article->status) {
+                                                case 'draft':
+                                                    echo 'Brouillon';
+                                                    break;
+                                                case 'published':
+                                                    echo 'Publié';
+                                                    break;
+                                                case 'archived':
+                                                    echo 'Archivé';
+                                                    break;
+                                                default:
+                                                    echo htmlspecialchars($article->status);
+                                            }
+                                        ?>
+                                    </span>
+                                </td>
+                                <td class="article-date">
+                                    <?= date('d/m/Y H:i', strtotime($article->created_at)) ?>
+                                </td>
+                                <td class="article-actions">
+                                    <div class="actions-group">
+                                        <a href="/admin/articles/<?= $article->id ?>/edit" class="btn btn-sm btn-edit" title="Modifier">
+                                            ✎ Éditer
+                                        </a>
+
+                                        <?php if ($article->status === 'draft'): ?>
+                                            <form method="POST" action="/admin/articles/<?= $article->id ?>/publish" class="action-form" style="display: inline;">
+                                                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
+                                                <button type="submit" class="btn btn-sm btn-publish" title="Publier">
+                                                    ✓ Publier
+                                                </button>
+                                            </form>
+                                        <?php elseif ($article->status === 'published'): ?>
+                                            <form method="POST" action="/admin/articles/<?= $article->id ?>/archive" class="action-form" style="display: inline;">
+                                                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
+                                                <button type="submit" class="btn btn-sm btn-archive" title="Archiver">
+                                                    📦 Archiver
+                                                </button>
+                                            </form>
+                                        <?php elseif ($article->status === 'archived'): ?>
+                                            <form method="POST" action="/admin/articles/<?= $article->id ?>/publish" class="action-form" style="display: inline;">
+                                                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
+                                                <button type="submit" class="btn btn-sm btn-publish" title="Republier">
+                                                    ✓ Republier
+                                                </button>
+                                            </form>
+                                        <?php endif; ?>
+
+                                        <form method="POST" action="/admin/articles/<?= $article->id ?>/delete" class="action-form" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr ? Cette action est irréversible.');">
+                                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
+                                            <button type="submit" class="btn btn-sm btn-delete" title="Supprimer">
+                                                🗑️ Supprimer
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+
+                <!-- Pagination -->
+                <?php if ($totalPages > 1): ?>
+                    <div class="pagination">
+                        <?php if ($page > 1): ?>
+                            <a href="?status=<?= urlencode($status) ?>&page=1" class="pagination-link">« Première</a>
+                            <a href="?status=<?= urlencode($status) ?>&page=<?= $page - 1 ?>" class="pagination-link">‹ Précédente</a>
+                        <?php endif; ?>
+
+                        <span class="pagination-info">
+                            Page <?= $page ?> sur <?= $totalPages ?>
+                        </span>
+
+                        <?php if ($page < $totalPages): ?>
+                            <a href="?status=<?= urlencode($status) ?>&page=<?= $page + 1 ?>" class="pagination-link">Suivante ›</a>
+                            <a href="?status=<?= urlencode($status) ?>&page=<?= $totalPages ?>" class="pagination-link">Dernière »</a>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
+            <?php endif; ?>
+        </div>
+
+        <div class="articles-footer">
+            <p class="article-count">Total : <?= $totalArticles ?> article(s)</p>
+            <a href="/admin" class="btn btn-secondary">← Retour au dashboard</a>
+        </div>
+    </div>
+
+    <style>
+        .admin-articles {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .articles-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+
+        .articles-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 20px;
+        }
+
+        .articles-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .btn-edit {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background-color: #218838;
+        }
+
+        .btn-publish {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+        .btn-publish:hover {
+            background-color: #138496;
+        }
+
+        .btn-archive {
+            background-color: #ffc107;
+            color: #333;
+        }
+
+        .btn-archive:hover {
+            background-color: #e0a800;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            border-left: 4px solid;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border-color: #28a745;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #dc3545;
+        }
+
+        .articles-filters {
+            margin-bottom: 25px;
+        }
+
+        .filters-form {
+            display: flex;
+            gap: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-group label {
+            font-weight: 500;
+            color: #555;
+        }
+
+        .filter-group select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .articles-table-wrapper {
+            overflow-x: auto;
+            margin-bottom: 25px;
+        }
+
+        .articles-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        .articles-table thead {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .articles-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #495057;
+            font-size: 14px;
+        }
+
+        .articles-table td {
+            padding: 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .articles-table tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .article-link {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .article-link:hover {
+            text-decoration: underline;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-draft {
+            background-color: #e2e3e5;
+            color: #383d41;
+        }
+
+        .status-published {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-archived {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .article-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .actions-group {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .action-form {
+            display: inline;
+        }
+
+        .no-articles {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+            font-size: 16px;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .pagination-link {
+            padding: 8px 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #007bff;
+            transition: all 0.2s;
+        }
+
+        .pagination-link:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .pagination-info {
+            padding: 8px 12px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .articles-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 2px solid #f0f0f0;
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+
+        .article-count {
+            color: #666;
+            font-weight: 500;
+            margin: 0;
+        }
+    </style>
+</body>
+</html>

@@ -193,5 +193,45 @@
     "path": "/admin",
     "method": "GET",
     "controller": "Admin\\AdminController"
+  },
+  {
+    "path": "/admin/articles",
+    "method": "GET",
+    "controller": "Admin\\ListArticlesController"
+  },
+  {
+    "path": "/admin/articles/create",
+    "method": "GET",
+    "controller": "Admin\\FormCreateArticleController"
+  },
+  {
+    "path": "/admin/articles/create",
+    "method": "POST",
+    "controller": "Admin\\CreateArticleActionController"
+  },
+  {
+    "path": "/admin/articles/:id/edit",
+    "method": "GET",
+    "controller": "Admin\\FormEditArticleController"
+  },
+  {
+    "path": "/admin/articles/:id/update",
+    "method": "POST",
+    "controller": "Admin\\UpdateArticleController"
+  },
+  {
+    "path": "/admin/articles/:id/publish",
+    "method": "POST",
+    "controller": "Admin\\PublishArticleActionController"
+  },
+  {
+    "path": "/admin/articles/:id/archive",
+    "method": "POST",
+    "controller": "Admin\\ArchiveArticleActionController"
+  },
+  {
+    "path": "/admin/articles/:id/delete",
+    "method": "POST",
+    "controller": "Admin\\DeleteArticleController"
   }
 ]

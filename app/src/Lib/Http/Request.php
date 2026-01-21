@@ -67,6 +67,22 @@ class Request {
         return $_POST;
     }
 
+    public function getPost(string $key = null, mixed $default = null): mixed
+    {
+        if ($key === null) {
+            return $_POST;
+        }
+        return $_POST[$key] ?? $default;
+    }
+
+    public function getQuery(string $key = null, mixed $default = null): mixed
+    {
+        if ($key === null) {
+            return $_GET;
+        }
+        return $_GET[$key] ?? $default;
+    }
+
     public function post(string $key, mixed $default = null): mixed
     {
         return $_POST[$key] ?? $default;
