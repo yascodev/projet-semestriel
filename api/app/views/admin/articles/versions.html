@@ -1,0 +1,55 @@
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="banner">
+        <h1>Historique des versions : {{ article.title }}</h1>
+        <div class="actions">
+            <a href="/admin/articles/edit/{{ article.id }}" class="btn btn-secondary">Retour à l'édition</a>
+        </div>
+    </div>
+
+    {% if flash_success %}
+        <div class="alert alert-success">{{ flash_success }}</div>
+    {% endif %}
+
+    {% if flash_error %}
+        <div class="alert alert-error">{{ flash_error }}</div>
+    {% endif %}
+
+    <div class="card">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date de modification</th>
+                    <th>Auteur</th>
+                    <th>Titre à cette version</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if versions is empty %}
+                    <tr>
+                        <td colspan="4" style="text-align: center;">Aucun historique disponible pour cet article.</td>
+                    </tr>
+                {% else %}
+                    {% for version in versions %}
+                        <tr>
+                            <td>{{ version.created_at }}</td>
+                            <td>{{ version.author_name }}</td>
+                            <td>{{ version.title }}</td>
+                            <td>
+                                <form action="/admin/articles/versions/restore" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir restaurer cette version ? La version actuelle sera sauvegardée dans l\'historique.');" style="display: inline;">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                                    <input type="hidden" name="version_id" value="{{ version.id }}">
+                                    <button type="submit" class="btn btn-primary btn-sm">Restaurer</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -184,7 +184,7 @@
     "method": "GET",
     "controller": "Admin\\Categories\\CategoriesController"
   },
-   {
+  {
     "path": "/admin/categories/create",
     "method": "GET",
     "controller": "Admin\\Categories\\CreateCategoryController"
@@ -328,6 +328,16 @@
     "path": "/admin/articles/show/:id",
     "method": "GET",
     "controller": "Admin\\Articles\\ShowArticleController"
+  },
+  {
+    "path": "/admin/articles/versions",
+    "method": "GET",
+    "controller": "Admin\\Articles\\VersionsController"
+  },
+  {
+    "path": "/admin/articles/versions/restore",
+    "method": "POST",
+    "controller": "Admin\\Articles\\RestoreVersionController"
   },
   {
     "path": "/admin/media",
