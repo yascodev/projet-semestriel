@@ -1,0 +1,50 @@
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="banner">
+        <h1>Articles de l'auteur : {{ author.firstname }} {{ author.lastname }}</h1>
+        <div class="actions">
+            <a href="/admin/articles" class="btn btn-secondary">Retour à la liste</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Statut</th>
+                    <th>Date de création</th>
+                    <th>Catégories</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if articles is empty %}
+                    <tr>
+                        <td colspan="5" style="text-align: center;">Cet auteur n'a pas encore rédigé d'articles.</td>
+                    </tr>
+                {% else %}
+                    {% for article in articles %}
+                        <tr>
+                            <td><strong>{{ article.title }}</strong></td>
+                            <td>
+                                <span class="badge badge-{{ article.status }}">
+                                    {{ article.status }}
+                                </span>
+                            </td>
+                            <td>{{ article.created_at|date('d/m/Y') }}</td>
+                            <td>{{ article.categories|join(', ') }}</td>
+                            <td>
+                                <a href="/admin/articles/show/{{ article.id }}" class="btn btn-sm btn-info">Voir</a>
+                                <a href="/admin/articles/edit/{{ article.id }}" class="btn btn-sm btn-primary">Modifier</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

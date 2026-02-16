@@ -105,6 +105,11 @@
     "controller": "Api\\v1\\Articles\\GetArticleVersionController"
   },
   {
+    "path": "/api/v1/articles/author/:id",
+    "method": "GET",
+    "controller": "Api\\v1\\Articles\\GetArticlesByAuthorController"
+  },
+  {
     "path": "/api/v1/categories",
     "method": "GET",
     "controller": "Api\\v1\\Categories\\GetCategoriesController"
@@ -338,6 +343,11 @@
     "path": "/admin/articles/versions/restore",
     "method": "POST",
     "controller": "Admin\\Articles\\RestoreVersionController"
+  },
+  {
+    "path": "/admin/articles/author/:id",
+    "method": "GET",
+    "controller": "Admin\\Articles\\AuthorArticlesController"
   },
   {
     "path": "/admin/media",
