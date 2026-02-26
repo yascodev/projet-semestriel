@@ -101,11 +101,18 @@ abstract class AbstractRepository
         return $this;
     }
 
-    public function from(string $tableAlias): self {
-        $table = $this->getTable();
+    public function from(string $table, string $tableAlias = null): self {
         $this->queryString .= " FROM $table";
+        if ($tableAlias) {
+            return $this->as($tableAlias);
+        }
+        return $this;
+    }
 
-        return $this->as($tableAlias);
+    public function join(string $joinClause): self
+    {
+        $this->queryString .= " " . $joinClause;
+        return $this;
     }
 
     public function as(string $tableAlias): self {
