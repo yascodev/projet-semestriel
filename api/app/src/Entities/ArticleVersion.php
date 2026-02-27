@@ -26,10 +26,10 @@ class ArticleVersion extends AbstractEntity {
     #[Column(type: 'int')]
     public ?int $author_id = null;
 
-    #[Column(type: 'varchar', size: 255)]
+    #[Column(type: 'datetime')]
     public string $created_at;
 
-    #[Column(type: 'varchar', size: 255)]
+    #[Column(type: 'datetime')]
     public string $updated_at;
 
     public function getId(): int {

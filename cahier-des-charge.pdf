@@ -1,0 +1,534 @@
+CAHIER DES CHARGES
+Projet semestriel – CMS Blog multi-auteurs
+DevFlow CMS
+Projet Semestriel 3A WD - S1 - Bloc 2 (2025-2026)
+ Établissement : SAS Decode
+ Titre préparé : Chef de projet digital (RNCP39235 – Niveau 6)
+ Bloc évalué : Bloc 2 – Management opérationnel du projet digital
+
+1. Contexte et justification du projet
+1.1. Contexte général
+Dans le cadre du projet semestriel de troisième année Web Development, notre équipe est amenée à concevoir et développer un CMS (Content Management System) from scratch, en PHP orienté objet, reposant sur un framework maison conçu spécifiquement pour ce projet.
+Ce travail s’inscrit dans une mise en situation professionnelle simulée, visant à reproduire les conditions réelles d’un projet digital en entreprise. Les étudiants ne sont pas uniquement positionnés comme développeurs, mais comme chefs de projet digitaux, responsables du cadrage fonctionnel, des choix techniques, de l’organisation du travail, du suivi de l’avancement et de la livraison finale du produit.
+Le CMS développé, baptisé DevFlow CMS, prend la forme d’un blog multi-auteurs spécialisé dans les thématiques technologie et développement web. Il permet à plusieurs contributeurs de produire, gérer et publier des contenus éditoriaux au sein d’un environnement structuré, sécurisé et contrôlé, reposant sur un workflow clair.
+
+1.2. Justification du choix
+Le choix de développer un CMS from scratch répond à plusieurs objectifs stratégiques et pédagogiques.
+Contrairement à l’utilisation d’un CMS existant, cette approche permet de :
+Comprendre en profondeur les mécanismes fondamentaux d’un système de gestion de contenu moderne (routing, contrôleurs, gestion des données, sécurité)
+
+
+Maîtriser les concepts clés de framework, d’architecture logicielle et de programmation orientée objet
+
+
+Appréhender concrètement les enjeux de sécurité applicative (authentification, autorisation, protection des données)
+
+
+Expérimenter la gestion complète d’un projet digital, depuis la phase de cadrage jusqu’à la livraison finale
+
+
+Ce choix permet également de démontrer la capacité à faire des arbitrages techniques et fonctionnels, dans un contexte contraint, compétence essentielle attendue d’un chef de projet digital.
+
+1.3. Cas d’usage retenu
+Le CMS développé, DevFlow CMS, est conçu comme un outil éditorial interne destiné à une équipe de rédacteurs et de contributeurs spécialisés dans les domaines de la tech et du développement web.
+Il permet :
+la création et la gestion d’articles par plusieurs auteurs,
+
+
+la structuration des contenus via des catégories et des tags,
+
+
+la gestion des médias associés aux publications,
+
+
+la mise en place d’un workflow éditorial basé sur des statuts.
+
+
+Ce cas d’usage a été retenu car il couvre l’ensemble des fonctionnalités essentielles d’un CMS professionnel tout en restant cohérent avec les contraintes d’un projet semestriel.
+
+2. Objectifs du projet
+2.1. Objectifs principaux
+L’objectif principal du projet est de concevoir et livrer un CMS fonctionnel, sécurisé et évolutif, tout en démontrant la maîtrise des compétences techniques, organisationnelles et méthodologiques attendues dans le cadre du Bloc 2 – Management opérationnel du projet digital.
+La réussite du projet ne se mesure pas uniquement à la livraison d’un produit fonctionnel, mais également à la qualité du pilotage, à la cohérence des choix effectués et à la capacité à justifier ces décisions devant un jury professionnel.
+
+2.2. Objectifs spécifiques
+Objectifs techniques
+Concevoir un framework PHP maison respectant les principes de la programmation orientée objet
+
+
+Structurer le code selon les standards PSR-4 afin d’assurer lisibilité et maintenabilité
+
+
+Mettre en place un système de publication multi-auteurs avec gestion fine des rôles et permissions
+
+
+Développer une API publique en lecture seule permettant l’exploitation des contenus par un frontend externe
+
+
+Implémenter un système de versioning minimal des articles afin de conserver l’historique des modifications
+
+
+Garantir un niveau de sécurité conforme aux bonnes pratiques du développement web
+
+
+Objectifs fonctionnels
+Proposer une interface d’administration claire, ergonomique et responsive
+
+
+Permettre une gestion complète des contenus éditoriaux (articles, catégories, tags, médias)
+
+
+Mettre en place un workflow de publication structuré avec des statuts explicites
+
+
+Assurer une expérience utilisateur cohérente selon les profils (administrateur, éditeur, auteur)
+
+
+Objectifs pédagogiques
+Planifier et organiser un projet digital de manière professionnelle
+
+
+Identifier, analyser et anticiper les risques techniques et organisationnels
+
+
+Coordonner le travail en équipe à l’aide d’outils collaboratifs
+
+
+Suivre la production selon une logique agile
+
+
+Présenter, argumenter et défendre les choix réalisés lors d’une soutenance orale
+
+
+
+3. Périmètre fonctionnel
+3.1. Fonctionnalités principales
+Le CMS permet la gestion complète de contenus éditoriaux sous forme d’articles de blog, organisés par catégories et tags, avec une médiathèque intégrée.
+Gestion des articles
+Création, modification, publication et archivage des articles
+
+
+Attribution automatique des articles aux auteurs
+
+
+Workflow éditorial basé sur des statuts clairs
+
+
+Validation conditionnelle des champs selon le statut
+
+
+Association multiple aux catégories et tags
+
+
+Gestion des médias associés, dont l’image à la une
+
+
+Versioning minimal permettant de conserver l’historique des modifications
+
+
+Gestion des catégories et tags
+Création, modification et suppression
+
+
+Relations N:N avec les articles
+
+
+Génération automatique de slugs uniques
+
+
+Structuration claire des contenus
+
+
+Gestion des médias
+Upload sécurisé de fichiers (images, vidéos, documents, audio)
+
+
+Validation des formats et des tailles
+
+
+Gestion des métadonnées pour l’accessibilité
+
+
+Médiathèque personnelle par utilisateur
+
+
+Association flexible aux articles
+
+
+Gestion des utilisateurs
+Création, modification et suppression de comptes
+
+
+Attribution de rôles (administrateur, éditeur, auteur)
+
+
+Authentification sécurisée par session
+
+
+Gestion granulaire des permissions
+
+
+Suivi statistique de l’activité par utilisateur
+
+
+Interface d’administration
+Tableau de bord synthétique
+
+
+Navigation latérale responsive
+
+
+Messages de feedback utilisateur
+
+
+Protection CSRF
+
+
+Affichage conditionné par les permissions
+
+
+API publique
+Endpoints REST en lecture seule
+
+
+Format JSON standardisé
+
+
+Pagination et filtres simples
+
+
+Accès aux articles, catégories et tags publiés
+
+
+
+4. Exigences fonctionnelles détaillées
+4.1. Authentification et autorisation
+Le système d’authentification repose sur une connexion par email et mot de passe, sécurisée par des sessions PHP.
+ Chaque requête est soumise à une vérification des permissions afin de garantir un accès strictement contrôlé aux fonctionnalités.
+Trois rôles sont définis :
+Administrateur
+
+
+Éditeur
+
+
+Auteur
+
+
+Les règles d’accès sont clairement documentées et appliquées à chaque action sensible.
+
+4.2. Gestion des articles
+La gestion des articles constitue le cœur du CMS.
+ Les formulaires sont conçus pour guider l’utilisateur et limiter les erreurs, avec une validation conditionnelle selon le statut de publication.
+Les droits de modification, publication et suppression sont strictement encadrés selon le rôle de l’utilisateur.
+
+4.3. Gestion des utilisateurs
+La gestion des utilisateurs est réservée aux administrateurs.
+ Elle permet de contrôler l’accès à la plateforme, d’attribuer les rôles et de garantir la sécurité globale du système.
+Des mécanismes de protection sont prévus afin d’éviter les erreurs critiques, telles que l’auto-suppression d’un compte administrateur.
+
+4.4. Gestion des catégories et tags
+Les catégories et tags permettent d’organiser et de structurer les contenus.
+ Ils sont gérés par les administrateurs et éditeurs afin de garantir la cohérence éditoriale globale du blog.
+
+4.5. Gestion des médias
+La médiathèque permet à chaque utilisateur de gérer ses propres fichiers.
+ Les contrôles de sécurité sur les uploads assurent la protection du serveur et des données.
+
+4.6. Interface d’administration
+L’interface d’administration est pensée comme un outil de travail quotidien.
+ Elle privilégie la clarté, la lisibilité et l’efficacité, tout en restant accessible sur tous les supports.
+
+4.7. API publique
+**Endpoints articles :**
+- `GET /api/v1/articles` : Liste des articles publiés avec pagination et filtres
+- `GET /api/v1/articles/:id` : Détail d'un article par ID
+- `GET /api/v1/articles/slug/:slug` : Détail d'un article par slug
+- `GET /api/v1/articles/:id/categories` : Catégories d'un article
+- `GET /api/v1/articles/:id/tags` : Tags d'un article
+- `GET /api/v1/articles/:id/versions` : Versions d'un article (authentifié)
+- `GET /api/v1/articles/:id/versions/:versionId` : Détail d'une version (authentifié)
+
+**Endpoints catégories :**
+- `GET /api/v1/categories` : Liste des catégories
+- `GET /api/v1/categories/:id` : Détail d'une catégorie
+- `GET /api/v1/categories/:id/articles` : Articles d'une catégorie
+
+**Endpoints tags :**
+- `GET /api/v1/tags` : Liste des tags
+- `GET /api/v1/tags/:id` : Détail d'un tag
+- `GET /api/v1/tags/:id/articles` : Articles d'un tag
+
+**Endpoints authentification :**
+- `POST /api/v1/auth/login` : Connexion
+- `GET/POST /api/v1/auth/logout` : Déconnexion
+- `GET /api/v1/auth/profile` : Profil utilisateur (authentifié)
+
+**Endpoints utilisateurs (Admin uniquement) :**
+- `GET /api/v1/users` : Liste des utilisateurs
+- `GET /api/v1/users/:id` : Détail d'un utilisateur
+- `POST /api/v1/users` : Créer un utilisateur
+- `PATCH /api/v1/users/:id` : Modifier un utilisateur
+- `DELETE /api/v1/users/:id` : Supprimer un utilisateur
+
+**Format de réponse :**
+- Toutes les réponses sont au format JSON
+- Codes HTTP appropriés (200, 201, 400, 401, 403, 404, 500)
+- Messages d'erreur clairs et structurés
+- Pagination pour les listes
+
+
+
+5. Exigences techniques
+### 5.1. Technologies imposées
+
+**Backend :**
+- PHP 8.4 avec Apache
+- Programmation orientée objet pure
+- Framework maison sans dépendances externes (composer.json avec require vide)
+- Respect des standards PSR-4 pour l'autoloading
+- Architecture MVC simplifiée
+
+**Base de données :**
+- PostgreSQL 16
+- Utilisation de PDO avec requêtes préparées (protection SQL injection)
+- Scripts SQL d'initialisation dans `database/init/`
+- Relations N:N gérées via tables de liaison
+
+**Frontend :**
+- Framework SASS maison
+- Structure modulaire (components, pages, partials)
+- Variables centralisées pour les couleurs et les espacements
+- Responsive design
+- Compilation via Sass (Dart Sass)
+
+**Conteneurisation :**
+- Docker et Docker Compose
+- Image PHP 8.4-apache personnalisée
+- Conteneur PostgreSQL 16
+- Volumes pour la persistance des données
+- Configuration PHP personnalisée (php.ini)
+
+**Versionnement :**
+- Git avec GitHub
+- Commits signés
+- Organisation par branches (feature/, fix/, chore/, docs/)
+- Documentation dans le README
+
+
+
+6. Exigences de sécurité
+### 6.1. Authentification et autorisation
+
+**Sécurisation des mots de passe :**
+- Hachage des mots de passe avec `password_hash()` (bcrypt)
+- Vérification avec `password_verify()`
+- Pas de stockage en clair
+
+**Gestion des sessions :**
+- Configuration sécurisée des sessions PHP
+- Régénération de session après connexion
+- Timeout de session approprié
+- Protection contre le vol de session
+
+**Vérification des permissions :**
+- Vérification à chaque requête
+- Protection contre l'accès non autorisé (redirection 403)
+- Matrice de permissions claire et documentée
+
+### 6.2. Protection contre les attaques
+
+**Protection SQL Injection :**
+- Utilisation exclusive de PDO avec prepared statements
+- Pas de concaténation de requêtes SQL
+- Validation et échappement de toutes les entrées
+
+**Protection XSS (Cross-Site Scripting) :**
+- Échappement HTML avec `htmlspecialchars()` sur toutes les sorties
+- Validation des entrées utilisateur
+- Pas d'exécution de code JavaScript injecté
+
+**Protection CSRF (Cross-Site Request Forgery) :**
+- Tokens CSRF générés et validés sur tous les formulaires
+- Protection contre les attaques cross-site request forgery
+- Régénération des tokens après utilisation
+
+**Protection contre les uploads malveillants :**
+- Validation stricte des types MIME
+- Limites de taille par type de fichier
+- Stockage sécurisé dans `/uploads/` avec `.htaccess` pour empêcher l'exécution PHP
+- Noms de fichiers uniques pour éviter les conflits
+- Vérification de l'intégrité des fichiers
+
+### 6.3. Sécurité des données
+
+**Protection des données utilisateurs :**
+- Collecte minimale des données (email, prénom, nom)
+- Pas de stockage de données sensibles en clair
+- Accès restreint aux données selon les rôles
+- Droit à l'effacement (suppression d'utilisateur)
+
+**Sécurité de la base de données :**
+- Utilisation de credentials sécurisés
+- Pas d'exposition des informations de connexion
+- Sauvegarde régulière (recommandation)
+
+---
+
+
+7. Contraintes et limites
+### 7.1. Contraintes techniques
+
+- Développement en PHP orienté objet uniquement
+- Pas de dépendances externes (framework maison)
+- Base de données PostgreSQL uniquement
+- Conteneurisation obligatoire avec Docker
+- Versionnement Git obligatoire
+
+### 7.2. Contraintes fonctionnelles
+
+- Pas de front-office public dans la version initiale
+- API en lecture seule uniquement (pas de création/modification via API)
+- Versioning minimal (pas de comparaison de versions)
+- Pas de système de recherche avancée
+
+### 7.3. Contraintes de temps
+
+- Projet semestriel avec échéance fixe
+- Respect des délais de livraison
+- Priorisation des fonctionnalités essentielles
+
+### 7.4. Contraintes de ressources
+
+- Développement par une équipe d'étudiants
+- Pas de budget externe
+- Utilisation d'outils gratuits (GitHub, Docker)
+
+
+8. Critères d’acceptation
+### 8.1. Critères fonctionnels
+
+**Authentification :**
+- ✅ Un utilisateur peut se connecter avec son email et mot de passe
+- ✅ Un utilisateur non authentifié est redirigé vers la page de connexion
+- ✅ Un utilisateur peut se déconnecter
+- ✅ Les mots de passe sont hachés et non réversibles
+
+**Gestion des articles :**
+- ✅ Un administrateur peut créer, modifier, publier et supprimer tous les articles
+- ✅ Un éditeur peut créer, modifier, publier et supprimer tous les articles
+- ✅ Un auteur peut créer et modifier uniquement ses propres articles
+- ✅ Un auteur ne peut pas publier directement (nécessite validation)
+- ✅ Le contenu est requis uniquement si l'article est publié
+- ✅ Les articles peuvent être associés à des catégories et tags multiples
+
+**Gestion des utilisateurs :**
+- ✅ Un administrateur peut créer, modifier et supprimer des utilisateurs
+- ✅ Un administrateur peut attribuer et modifier les rôles
+- ✅ Un utilisateur ne peut pas s'auto-supprimer
+- ✅ L'email doit être unique
+
+**Gestion des catégories et tags :**
+- ✅ Un administrateur et un éditeur peuvent gérer les catégories et tags
+- ✅ Les slugs sont générés automatiquement et sont uniques
+- ✅ Un auteur ne peut pas gérer les catégories et tags
+
+**Gestion des médias :**
+- ✅ Chaque utilisateur peut uploader et gérer ses propres médias
+- ✅ Les types de fichiers sont validés (images, vidéos, PDF, audio)
+- ✅ Les tailles de fichiers sont limitées selon le type
+- ✅ Les médias peuvent être associés aux articles
+
+**API publique :**
+- ✅ Les articles publiés sont accessibles via l'API
+- ✅ Les catégories et tags sont accessibles via l'API
+- ✅ Les réponses sont au format JSON
+- ✅ Les codes HTTP sont appropriés
+
+### 8.2. Critères techniques
+
+**Framework maison :**
+- ✅ Routing dynamique fonctionnel
+- ✅ Système de contrôleurs opérationnel
+- ✅ ORM léger avec CRUD automatique
+- ✅ Middleware d'authentification et permissions
+- ✅ Respect des standards PSR-4
+
+**Sécurité :**
+- ✅ Protection contre les injections SQL
+- ✅ Protection contre les attaques XSS
+- ✅ Protection CSRF sur tous les formulaires
+- ✅ Validation des uploads de fichiers
+- ✅ Mots de passe hachés
+
+**Code :**
+- ✅ Code orienté objet
+- ✅ Respect des conventions de nommage
+- ✅ Commentaires dans le code
+- ✅ Structure modulaire et maintenable
+
+**Docker :**
+- ✅ Application conteneurisée
+- ✅ Base de données conteneurisée
+- ✅ Configuration fonctionnelle
+- ✅ Instructions d'installation claires
+
+### 8.3. Critères de qualité
+
+**Documentation :**
+- ✅ README complet avec instructions d'installation
+- ✅ Documentation technique du framework
+- ✅ Commentaires dans le code
+- ✅ Documentation des API endpoints
+
+**Interface utilisateur :**
+- ✅ Interface responsive (mobile, tablette, desktop)
+- ✅ Navigation intuitive
+- ✅ Messages d'erreur clairs
+- ✅ Design cohérent
+
+**Performance :**
+- ✅ Temps de réponse acceptable (< 2 secondes)
+- ✅ Requêtes SQL optimisées
+- ✅ Pas de requêtes N+1
+
+
+9. Livrables attendus
+### 9.1. Livrables techniques
+
+**Code source :**
+- Repository GitHub complet avec historique de commits
+- Code source du framework maison
+- Code source du CMS
+- Scripts SQL d'initialisation
+- Configuration Docker (Dockerfile, docker-compose.yml)
+- Configuration PHP (php.ini)
+
+**Documentation technique :**
+- README complet avec instructions d'installation et d'utilisation
+- Documentation technique du framework
+- Documentation des API endpoints
+- Commentaires dans le code
+- Architecture technique documentée
+
+**Application fonctionnelle :**
+- Application déployée et fonctionnelle
+- Base de données initialisée
+- Accès aux différentes interfaces (back-office, API)
+- Compte administrateur par défaut
+
+### 9.2. Livrables de gestion de projet
+
+**Documentation de gestion de projet :**
+- Planning des sprints
+- Suivi des tâches et des issues
+- Journal de bord d'équipe
+- Gestion des risques identifiés
+- Décisions techniques documentées
+
+**Présentation orale :**
+- Support de présentation (diapositives)
+- Démonstration du CMS
+- Présentation des choix techniques
+- Retour d'expérience sur la méthodologie
+- Réponses aux questions du jury
