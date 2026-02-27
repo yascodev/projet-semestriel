@@ -187,7 +187,7 @@ abstract class AbstractRepository
     public function findBy(array $criteria) {
         $this->queryBuilder()
             ->select()
-            ->from(substr($this->getTable(), 0, 1))
+            ->from($this->getTable(), substr($this->getTable(), 0, 1))
         ;
 
         $this->addWhereAccordingToCriterias($criteria);
@@ -199,7 +199,7 @@ abstract class AbstractRepository
     public function findOneBy(array $criteria) {
         $this->queryBuilder()
             ->select()
-            ->from(substr($this->getTable(), 0, 1))
+            ->from($this->getTable(), substr($this->getTable(), 0, 1))
             ;
 
         $this->addWhereAccordingToCriterias($criteria);
@@ -316,7 +316,7 @@ abstract class AbstractRepository
     public function remove(AbstractEntity $entity) {
         $this->queryBuilder()
             ->delete()
-            ->from($this->getTable())
+            ->from($this->getTable(), substr($this->getTable(), 0, 1))
             ->where('id', self::CONDITIONS['eq'])
             ->addParam('id', $entity->getId())
             ->executeQuery();
