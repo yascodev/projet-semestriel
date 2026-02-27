@@ -180,6 +180,11 @@
     "controller": "Errors\\ForbiddenController"
   },
   {
+    "path": "/404",
+    "method": "GET",
+    "controller": "Errors\\PageNotFoundController.php"
+  },
+  {
     "path": "/admin/categories",
     "method": "GET",
     "controller": "Admin\\Categories\\CategoriesController"

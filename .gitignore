@@ -2,7 +2,6 @@
 log/
 mysql/
 postgres/
-dist/
 *.pid
 *.sock
 *.log

@@ -22,10 +22,19 @@ try {
     $request = new Request();
     $response = Router::route($request);
 
-    header($response->getHeadersAsString());
+    foreach ($response->getHeaders() as $name => $value) {
+        header("$name: $value");
+    }
     http_response_code($response->getStatus());
     echo $response->getContent();
     exit();
 } catch(\Exception $e) {
-    echo $e->getMessage();
+    $pageNotFoundController = new \App\Controllers\Errors\PageNotFoundController();
+    $response = $pageNotFoundController->process(new Request());
+    foreach ($response->getHeaders() as $name => $value) {
+        header("$name: $value");
+    }
+    http_response_code(404);
+    echo $response->getContent();
+    exit();
 }
