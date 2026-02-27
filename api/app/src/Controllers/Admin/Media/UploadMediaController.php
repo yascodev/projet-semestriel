@@ -102,7 +102,7 @@ class UploadMediaController extends AbstractController
     {
         $errors = [];
 
-        // Vérifier le type MIME
+        // Vérifier le type 
         $allowedMimes = [
             'image/jpeg', 'image/png', 'image/gif', 'image/webp',
             'video/mp4', 'video/webm',
@@ -159,9 +159,6 @@ class UploadMediaController extends AbstractController
         return $errors;
     }
 
-    /**
-     * Récupère la limite maximale d'upload PHP
-     */
     private function getPhpMaxUploadSize(): int
     {
         $uploadMax = $this->parseSize(ini_get('upload_max_filesize'));
@@ -171,9 +168,6 @@ class UploadMediaController extends AbstractController
         return min($uploadMax, $postMax);
     }
 
-    /**
-     * Convertit une taille PHP (ex: "10M") en bytes
-     */
     private function parseSize(string $size): int
     {
         $size = trim($size);
@@ -198,9 +192,7 @@ class UploadMediaController extends AbstractController
         return $value;
     }
 
-    /**
-     * Formate une taille en bytes en format lisible
-     */
+    
     private function formatBytes(int $bytes): string
     {
         $units = ['B', 'KB', 'MB', 'GB'];
