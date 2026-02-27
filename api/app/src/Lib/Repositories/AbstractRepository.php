@@ -12,8 +12,8 @@ use ReflectionProperty;
 abstract class AbstractRepository
 {
     protected DatabaseConnexion $db;
-    protected string $queryString;
-    protected string $tableAlias;
+    protected string $queryString = '';
+    protected string $tableAlias = '';
     protected array $params = [];
     protected \PDOStatement $query;
 
