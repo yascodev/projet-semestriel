@@ -101,7 +101,7 @@ abstract class AbstractRepository
         return $this;
     }
 
-    public function from(string $table, string $tableAlias = null): self {
+    public function from(string $table, ?string $tableAlias = null): self {
         $this->queryString .= " FROM $table";
         if ($tableAlias) {
             return $this->as($tableAlias);
