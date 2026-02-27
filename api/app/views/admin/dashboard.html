@@ -121,7 +121,6 @@
             <?php endif; ?>
         </div>
         <div class="dashboard__grid">
-            <!-- Colonne gauche : Articles récents -->
             <div class="dashboard__widget">
                 <div class="widget">
                     <div class="widget__header">
@@ -162,7 +161,7 @@
                 </div>
             </div>
 
-            <!-- Colonne droite : Actions rapides -->
+            <!-- Actions rapides -->
             <div class="dashboard__widget">
                 <div class="widget">
                     <div class="widget__header">
@@ -171,26 +170,21 @@
                     <div class="widget__content">
                         <div class="quick-actions">
                             <a href="/admin/articles/create" class="quick-action">
-                                <span class="quick-action__icon">✏️</span>
                                 <span class="quick-action__label">Créer un article</span>
                             </a>
                             <a href="/admin/media/upload" class="quick-action">
-                                <span class="quick-action__icon">📤</span>
                                 <span class="quick-action__label">Uploader un média</span>
                             </a>
                             <?php if (isset($can_manage_categories) && $can_manage_categories): ?>
                             <a href="/admin/categories/create" class="quick-action">
-                                <span class="quick-action__icon">📂</span>
                                 <span class="quick-action__label">Nouvelle catégorie</span>
                             </a>
                             <a href="/admin/tags/create" class="quick-action">
-                                <span class="quick-action__icon">🏷️</span>
                                 <span class="quick-action__label">Nouveau tag</span>
                             </a>
                             <?php endif; ?>
                             <?php if (isset($is_admin) && $is_admin): ?>
                             <a href="/admin/users/create" class="quick-action">
-                                <span class="quick-action__icon">👤</span>
                                 <span class="quick-action__label">Nouvel utilisateur</span>
                             </a>
                             <?php endif; ?>

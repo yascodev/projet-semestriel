@@ -1,5 +1,5 @@
 @use "partials/layers";
-@use "vendor/modern-normalize.css";
+@use "modern-normalize/modern-normalize";
 @use "partials/utilities" as utilities;
 @use "partials/globals" as g;
 @use "components/button" as button;
