@@ -12,6 +12,7 @@
         <a href="/admin/articles" class="dashboard__back">Retour à la liste</a>
         <div class="dashboard__header">
             <h1 class="dashboard__title">Modifier l'article</h1>
+            <a href="/admin/articles/versions?id=<?= htmlspecialchars($article->id) ?>" class="dashboard__back" style="margin-left: 20px;">Historique des versions</a>
         </div>
         <div class="dashboard__content dashboard__content--full">
             <form method="POST" action="/admin/articles/edit/<?= htmlspecialchars($article->id) ?>" class="users__form users__form--two-columns">
